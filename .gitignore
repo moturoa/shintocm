@@ -1,0 +1,8 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+test/conf/config.yml
+conf/
+*.Rproj
