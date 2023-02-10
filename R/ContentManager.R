@@ -11,10 +11,11 @@ contentManager <- R6::R6Class(
 
   public = list(
 
-    initialize = function(what = NULL, schema, table = "shintocm", db_connection = NULL){
+    initialize = function(what = NULL, schema, table = "shintocm",
+                          db_connection = NULL, ...){
 
       super$initialize(what = what, schema = schema, pool = TRUE,
-                       db_connection = db_connection)
+                       db_connection = db_connection, ...)
 
       self$table <- table
 
@@ -96,14 +97,14 @@ contentManager <- R6::R6Class(
 
    },
 
-    delete = function(key){
+   delete = function(key){
 
       self$replace_value_where(self$table,
                         col_replace = "deleted",
                         val_replace = 1,
                         col_compare = "key", val_compare = key)
 
-    }
+   }
 
 
   )

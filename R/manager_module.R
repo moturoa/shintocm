@@ -57,12 +57,8 @@ managerServer <- function(input, output, session, .cm){
     softui::virtual_select_input(ns("sel_key"), "Selecteer content key",
                                  choices = .cm$list_keys(),
                                  width = 400,
-                                 multiple = FALSE, autoSelectFirstOption = FALSE)
-  })
-
-
-  observe({
-    updateVirtualSelect("sel_key", choices = .cm$list_keys())
+                                 multiple = FALSE,
+                                 autoSelectFirstOption = TRUE)
   })
 
   observeEvent(input$sel_key, {

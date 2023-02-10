@@ -58,7 +58,8 @@ Shinto Content Manager class
   what = NULL,
   schema,
   table = "shintocm",
-  db_connection = NULL
+  db_connection = NULL,
+  ...
 )}\if{html}{\out{</div>}}
 }
 
