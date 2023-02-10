@@ -1,5 +1,9 @@
 
-
+#' Shinto Content Manager class
+#' @export
+#' @importFrom R6 R6Class
+#' @importFrom shintodb databaseClass
+#' @importFrom dplyr filter pull collect
 contentManager <- R6::R6Class(
 
   inherit = shintodb::databaseClass,
@@ -7,9 +11,10 @@ contentManager <- R6::R6Class(
 
   public = list(
 
-    initialize = function(what, schema, table = "shintocm", database_connection = NULL){
+    initialize = function(what = NULL, schema, table = "shintocm", db_connection = NULL){
 
-      super$initialize(what = what, schema = schema, pool = TRUE)
+      super$initialize(what = what, schema = schema, pool = TRUE,
+                       db_connection = db_connection)
 
       self$table <- table
 
@@ -17,9 +22,9 @@ contentManager <- R6::R6Class(
 
     get = function(key, content_only = TRUE){
 
-      row <- self$read_table(self$table, lazy = TRUE) %>%
-        filter(key == !!key) %>%
-        collect
+      row <- self$read_table(self$table, lazy = TRUE) |>
+        filter(key == !!key) |>
+        collect()
 
       if(nrow(row) == 0){
         return(NULL)
@@ -38,6 +43,13 @@ contentManager <- R6::R6Class(
 
     },
 
+    is_deleted = function(key){
+
+      val <- self$get(key, content_only = FALSE)
+      val$deleted > 0
+
+    },
+
     set = function(key, value, userid = "unknown_user"){
 
       if(!self$has_key(key)){
@@ -52,6 +64,11 @@ contentManager <- R6::R6Class(
         )
 
       } else {
+        # als nieuwe key gezet, maar deze bestond al als verwijderde key, undelete de key eerst
+        self$replace_value_where(self$table,
+                                 col_replace = "deleted",
+                                 val_replace = 0,
+                                 col_compare = "key", val_compare = key)
         self$replace_value_where(self$table,
                           col_replace = "content",
                           val_replace = value,
@@ -64,6 +81,18 @@ contentManager <- R6::R6Class(
 
 
     },
+
+   list_keys = function(include_deleted = FALSE){
+
+      out <- self$read_table(self$table, lazy = TRUE)
+
+      if(!include_deleted){
+        out <- dplyr::filter(out, deleted == 0)
+      }
+
+      dplyr::collect(out) |> dplyr::pull(key)
+
+   },
 
     delete = function(key){
 
@@ -81,20 +110,5 @@ contentManager <- R6::R6Class(
 )
 
 
-library(shintodb)
-library(DBI)
-library(dplyr)
-
-.cm <- contentManager$new("Demo", schema = "wonmon")
-
-
-.cm$set("tooltip_aantalwoningen", "Aantal woningen in het project")
-
-.cm$set("tooltip_huurkoop", "huur of koop")
-.cm$set("tooltip_huurkoop", "huur of koopof toch wat andr")
-
-.cm$get("tooltip_aantalwoningen")
-
-.cm$close()
 
 
