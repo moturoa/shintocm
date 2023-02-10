@@ -93,7 +93,9 @@ contentManager <- R6::R6Class(
         out <- dplyr::filter(out, deleted == 0)
       }
 
-      dplyr::collect(out) |> dplyr::pull(key)
+      dplyr::collect(out) |>
+        dplyr::pull(key) |>
+        sort()
 
    },
 
