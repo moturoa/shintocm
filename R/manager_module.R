@@ -28,7 +28,11 @@ managerUI <- function(id){
           shinyjs::hidden(
             tags$div(id = ns("ui_edit_block"),
 
-                     shintocatman::htmlInput(ns("edit_content"), label = "Content", value = ""),
+                     shintocatman::htmlInput(ns("edit_content"), label = "Content", value = "",
+                                             toolbar = "styleselect | bold italic | numlist bullist | outdent indent | undo redo | insertdatetime link",
+                                             menubar = FALSE,
+                                             plugins = c("link","lists", "insertdatetime", "autoresize"),
+                                             ),
 
                      tags$br(),
                      softui::action_button(ns("btn_save_content"), "Opslaan", status = "success", icon = bsicon("save")),
@@ -73,6 +77,7 @@ managerServer <- function(input, output, session, .cm){
 
   db_key_value <- reactive({
     db_ping()
+    req(input$sel_key)
     .cm$get(input$sel_key)
   })
 
@@ -97,7 +102,7 @@ managerServer <- function(input, output, session, .cm){
 
 
   output$ui_dirty <- renderUI({
-    req(db_key_value() != input$edit_content)
+    req(isTRUE(db_key_value() != input$edit_content))
     tags$p(bsicon("exclamation-triangle-fill", status = "danger"), tags$i("Er zijn niet opgeslagen wijzigingen"),
            style = "padding-top: 8px;pading-bottom:8px;")
   })

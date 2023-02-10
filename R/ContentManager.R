@@ -22,6 +22,8 @@ contentManager <- R6::R6Class(
 
     get = function(key, content_only = TRUE){
 
+      if(nchar(key) == 0)return(NULL)
+
       row <- self$read_table(self$table, lazy = TRUE) |>
         filter(key == !!key) |>
         collect()
