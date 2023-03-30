@@ -5,43 +5,42 @@ managerUI <- function(id){
 
   ns <- NS(id)
 
-  softui::box(width = 12, title = "Content Manager", icon = bsicon("filetype-html", status = "info"),
 
-          softui::fluid_row(
-            column(6,
-                uiOutput(ns("ui_selector"))
+    softui::fluid_page(
+      softui::fluid_row(
+        column(6,
+            uiOutput(ns("ui_selector"))
 
-            ),
-            column(6,
+        ),
+        column(6,
 
-                   textInput(ns("txt_new_key"), "Maak nieuwe content key") %>%
-                     tagAppendAttributes(style = "display: inline-block;margin-right: 40px;"),
+               textInput(ns("txt_new_key"), "Maak nieuwe content key") %>%
+                 tagAppendAttributes(style = "display: inline-block;margin-right: 40px;"),
 
-                   shinyjs::disabled(
-                     softui::action_button(ns("btn_save_key"), "Opslaan", status = "info", icon = bsicon("save")) %>%
-                       tagAppendAttributes(style = "margin-top: 12px;")
-                   )
+               shinyjs::disabled(
+                 softui::action_button(ns("btn_save_key"), "Opslaan", status = "info", icon = bsicon("save")) %>%
+                   tagAppendAttributes(style = "margin-top: 12px;")
+               )
 
-            )
-          ),
+        )
+      ),
 
-          shinyjs::hidden(
-            tags$div(id = ns("ui_edit_block"),
+      shinyjs::hidden(
+        tags$div(id = ns("ui_edit_block"),
 
-                     shintocatman::htmlInput(ns("edit_content"), label = "Content", value = "",
-                                             toolbar = "styleselect | bold italic | numlist bullist | outdent indent | undo redo | insertdatetime link",
-                                             menubar = FALSE,
-                                             plugins = c("link","lists", "insertdatetime", "autoresize"),
-                                             ),
+                 shintocatman::htmlInput(ns("edit_content"), label = "Content", value = "",
+                                         toolbar = "styleselect | bold italic | numlist bullist | outdent indent | undo redo | insertdatetime link",
+                                         menubar = FALSE,
+                                         plugins = c("link","lists", "insertdatetime", "autoresize"),
+                                         ),
 
-                     tags$br(),
-                     softui::action_button(ns("btn_save_content"), "Opslaan", status = "success", icon = bsicon("save")),
-                     uiOutput(ns("ui_dirty"), height = 30)
+                 tags$br(),
+                 softui::action_button(ns("btn_save_content"), "Opslaan", status = "success", icon = bsicon("save")),
+                 uiOutput(ns("ui_dirty"), height = 30)
 
-            )
-          )
-
-  )
+        )
+      )
+    )
 
 }
 

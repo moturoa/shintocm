@@ -1,7 +1,7 @@
 Package: shintocm
 Type: Package
 Title: Simple content manager for Shinto Apps
-Version: 0.1.0
+Version: 0.1.1
 Author: Remko Duursma
 Maintainer: Remko Duursma <remko@shintolabs.nl>
 Description: Manage HTML content blocks
